@@ -7,9 +7,13 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-lg rounded" style="border: none;">
                     <div class="card-body text-center">
-                        <img src="{{ asset('images/unik.png') }}" class="img-fluid mb-1" alt="Sample image" style="width: 45%">
-                        <div style="height: 1px; background-color: #0B773D; width: 50%; margin: 10px auto;"></div>
-                        <h4 class="mt-1" style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #0B773D;">MASUK</h4>
+                        <img src="{{ asset('images/unik1.png') }}" class="img-fluid" style="width:45%; margin-bottom:5px;">
+
+                        <div style="height:1px; background:#0B773D; width:50%; margin:5px auto;"></div>
+
+                        <h4 style="margin-top:5px; font-family:'Poppins', sans-serif; font-weight:600; color:#0B773D;">
+                            MASUK
+                        </h4>
                         @if (session('pesan'))
                         <div class="alert alert-success">
                             {{ session('pesan') }}

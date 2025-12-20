@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Keranjang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -36,22 +37,28 @@ class CheckoutController extends Controller
      * Proses checkout dan generate Snap token Midtrans
      */
     public function process(Request $request)
-    {
-        $user = Auth::guard('pelanggan')->user();
-        $keranjang = Keranjang::with('product')->where('user_id', $user->id)->get();
+{
+    $user = Auth::guard('pelanggan')->user();
+    $keranjang = Keranjang::with('product')
+        ->where('user_id', $user->id)
+        ->get();
 
-        if ($keranjang->isEmpty()) {
-            return redirect()->route('pelanggan.home')->with('error', 'Keranjang kosong.');
-        }
+    if ($keranjang->isEmpty()) {
+        return redirect()->route('pelanggan.home')
+            ->with('error', 'Keranjang kosong.');
+    }
 
-        $subtotal = $keranjang->sum(fn($item) => $item->product->price * $item->jumlah);
-        $shipping_cost = 0; // bisa disesuaikan
-        $total = $subtotal + $shipping_cost;
+    $subtotal = $keranjang->sum(fn ($item) => $item->product->price * $item->jumlah);
+    $shipping_cost = 0;
+    $total = $subtotal + $shipping_cost;
 
-        // Simpan order ke database
+    DB::beginTransaction();
+
+    try {
+        // 1️⃣ Simpan order
         $order = Order::create([
             'id' => Str::uuid(),
-            'pelanggan_id' => $user->id,               // dari pelanggan yang login
+            'pelanggan_id' => $user->id,
             'subtotal' => $subtotal,
             'shipping_cost' => $shipping_cost,
             'total_amount' => $total,
@@ -59,28 +66,50 @@ class CheckoutController extends Controller
             'payment_status' => 'pending',
         ]);
 
-        // Konfigurasi Midtrans
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        // 2️⃣ Kurangi stok produk
+        foreach ($keranjang as $item) {
+            $product = $item->product;
 
-        $params = [
-            'transaction_details' => [
-                'order_id' => $order->id,
-                'gross_amount' => $order->total_amount,
-            ],
-            'customer_details' => [
-                'first_name' => $user->name,
-                'email' => $user->email,
-            ],
-        ];
+            // Cek stok cukup
+            if ($product->stock < $item->jumlah) {
+                throw new \Exception("Stok produk {$product->name} tidak mencukupi");
+            }
 
-        // Dapatkan Snap Token
-        $snapToken = Snap::getSnapToken($params);
+            $product->decrement('stock', $item->jumlah);
+        }
 
-        return view('pelanggan.pembayaran', compact('snapToken', 'order'));
+        DB::commit();
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return redirect()->back()->with(
+            'error',
+            'Gagal memproses pesanan: ' . $e->getMessage()
+        );
     }
+
+    // 3️⃣ Konfigurasi Midtrans (TIDAK DIUBAH)
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
+
+    $params = [
+        'transaction_details' => [
+            'order_id' => $order->id,
+            'gross_amount' => $order->total_amount,
+        ],
+        'customer_details' => [
+            'first_name' => $user->name,
+            'email' => $user->email,
+        ],
+    ];
+
+    $snapToken = Snap::getSnapToken($params);
+
+    return view('pelanggan.pembayaran', compact('snapToken', 'order'));
+}
 
      /**
      * Callback Midtrans

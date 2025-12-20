@@ -31,7 +31,12 @@
         <div class="container">
             <div class="logo">
                 <a href="/">
-                    <img src="{{ asset('images/pdg.png') }}" alt="Toserba Unik Padang" class="img-fluid" title="Home">
+                    <img src="{{ asset('images/unik2.png') }}"
+     alt="Toserba Unik Padang"
+     class="img-fluid"
+     title="Home"
+     style="width: 120px;">
+
                 </a>
             </div>
             <nav class="main-nav d-none d-md-block">

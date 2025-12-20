@@ -34,12 +34,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi</label>
-                            <textarea name="description" rows="3" class="form-control rounded-3"
-                                      placeholder="Masukkan deskripsi produk">{{ old('description') }}</textarea>
-                        </div>
-
-                        <div class="mb-3">
                             <label for="price" class="form-label">Harga</label>
                             <input type="number" name="price" class="form-control rounded-3"
                                    placeholder="Masukkan harga" value="{{ old('price') }}" required>
@@ -54,6 +48,12 @@
                         <div class="mb-3">
                             <label for="image" class="form-label">Gambar Produk</label>
                             <input type="file" name="image" class="form-control rounded-3" accept="image/*">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Deskripsi</label>
+                            <textarea name="description" rows="3" class="form-control rounded-3"
+                                      placeholder="Masukkan deskripsi produk">{{ old('description') }}</textarea>
                         </div>
 
                         <div class="d-flex justify-content-between">

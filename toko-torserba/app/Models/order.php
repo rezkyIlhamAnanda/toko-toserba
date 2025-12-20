@@ -15,7 +15,7 @@ class Order extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'pelanggan_id',       // ✅ diganti dari user_id
+        'pelanggan_id',
         'subtotal',
         'shipping_cost',
         'total_amount',

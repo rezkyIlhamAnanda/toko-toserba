@@ -39,6 +39,7 @@ class CheckoutController extends Controller
     public function process(Request $request)
 {
     $user = Auth::guard('pelanggan')->user();
+
     $keranjang = Keranjang::with('product')
         ->where('user_id', $user->id)
         ->get();
@@ -48,29 +49,28 @@ class CheckoutController extends Controller
             ->with('error', 'Keranjang kosong.');
     }
 
-    $subtotal = $keranjang->sum(fn ($item) => $item->product->price * $item->jumlah);
-    $shipping_cost = 0;
-    $total = $subtotal + $shipping_cost;
+    $subtotal = $keranjang->sum(fn ($item) =>
+        $item->product->price * $item->jumlah
+    );
 
     DB::beginTransaction();
 
     try {
-        // 1️⃣ Simpan order
+        // 1️⃣ Simpan order (SESUAI FILLABLE)
         $order = Order::create([
             'id' => Str::uuid(),
-            'pelanggan_id' => $user->id,
-            'subtotal' => $subtotal,
-            'shipping_cost' => $shipping_cost,
-            'total_amount' => $total,
-            'shipping_address' => $request->address ?? 'Alamat belum diisi',
-            'payment_status' => 'pending',
+            'pelanggan_id'      => $user->id,
+            'subtotal'          => $subtotal,
+            'alamat'            => $request->address ?? 'Alamat belum diisi',
+            'status'            => 'dikemas',
+            'status_pembayaran' => 'pending',         
+            'payment_method'    => 'midtrans',
         ]);
 
         // 2️⃣ Kurangi stok produk
         foreach ($keranjang as $item) {
             $product = $item->product;
 
-            // Cek stok cukup
             if ($product->stock < $item->jumlah) {
                 throw new \Exception("Stok produk {$product->name} tidak mencukupi");
             }
@@ -89,7 +89,7 @@ class CheckoutController extends Controller
         );
     }
 
-    // 3️⃣ Konfigurasi Midtrans (TIDAK DIUBAH)
+    // 3️⃣ Midtrans Config
     Config::$serverKey = config('midtrans.server_key');
     Config::$isProduction = config('midtrans.is_production');
     Config::$isSanitized = true;
@@ -98,7 +98,7 @@ class CheckoutController extends Controller
     $params = [
         'transaction_details' => [
             'order_id' => $order->id,
-            'gross_amount' => $order->total_amount,
+            'gross_amount' => $order->subtotal, // ⬅️ pakai subtotal
         ],
         'customer_details' => [
             'first_name' => $user->name,
@@ -110,6 +110,7 @@ class CheckoutController extends Controller
 
     return view('pelanggan.pembayaran', compact('snapToken', 'order'));
 }
+
 
      /**
      * Callback Midtrans

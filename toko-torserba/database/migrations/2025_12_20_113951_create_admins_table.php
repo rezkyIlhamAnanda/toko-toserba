@@ -1,6 +1,5 @@
 <?php
 
-// database/migrations/xxxx_xx_xx_xxxxxx_create_admins_table.php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -9,13 +8,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('admins', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('phone')->nullable();
+            $table->bigIncrements('id');
+            $table->string('name', 255);
+            $table->string('email', 50)->unique();
+            $table->string('password', 255);
+            $table->string('no_hp', 20);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

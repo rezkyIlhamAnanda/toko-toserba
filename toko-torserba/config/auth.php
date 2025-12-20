@@ -48,7 +48,7 @@ return [
 
     'pelanggan' => [
         'driver' => 'session',
-        'provider' => 'users_pelanggan',
+        'provider' => 'pelanggans',
     ],
 ],
 
@@ -72,21 +72,23 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => env('AUTH_MODEL', App\Models\User::class),
+    ],
 
-        'admins' => [
+    'admins' => [
         'driver' => 'eloquent',
         'model' => App\Models\Admin::class,
     ],
 
-    'users_pelanggan' => [
+    
+    'pelanggans' => [
         'driver' => 'eloquent',
-        'model' => App\Models\UserPelanggan::class,
+        'model' => App\Models\Pelanggan::class,
     ],
 ],
+
 
 
 

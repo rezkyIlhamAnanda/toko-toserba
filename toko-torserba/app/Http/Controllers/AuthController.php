@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserPelanggan;
+use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,23 +17,23 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:100',
-            'email'    => 'required|email|unique:users_pelanggan,email',
-            'phone'    => 'nullable|string|max:15',
-            'address'  => 'nullable|string|max:255',
+            'nama'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:pelanggans,email',
+            'no_hp'    => 'nullable|string|max:20',
+            'alamat'   => 'nullable|string',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        $user = UserPelanggan::create([
-            'name'     => $request->name,
+        $user = Pelanggan::create([
+            'nama'     => $request->nama,
             'email'    => $request->email,
-            'phone'    => $request->phone,
-            'address'  => $request->address,
+            'no_hp'    => $request->no_hp,
+            'alamat'   => $request->alamat,
             'password' => Hash::make($request->password),
         ]);
 
         Auth::guard('pelanggan')->login($user);
-        session(['username' => $user->name]); // simpan nama ke session
+        session(['username' => $user->nama]);
 
         return redirect()->route('pelanggan.home')
             ->with('success', 'Registrasi berhasil, selamat datang!');
@@ -56,11 +56,11 @@ class AuthController extends Controller
         if (Auth::guard('pelanggan')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            // Simpan nama pelanggan ke session
             $user = Auth::guard('pelanggan')->user();
-            session(['username' => $user->name]);
+            session(['username' => $user->nama]);
 
-            return redirect()->route('pelanggan.home')->with('success', 'Berhasil login!');
+            return redirect()->route('pelanggan.home')
+                ->with('success', 'Berhasil login!');
         }
 
         return back()->withErrors([
@@ -74,7 +74,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Hapus session username
         session()->forget('username');
 
         return redirect()->route('pelanggan.login')

@@ -40,8 +40,7 @@ class CheckoutController extends Controller
      */
     public function process(Request $request)
 {
-
-
+   
     $request->validate([
         'alamat' => 'required',
     ]);
@@ -68,21 +67,24 @@ try {
         'pelanggan_id'      => $user->id,
         'total'             => $subtotal,
         'alamat'            => $request->alamat,
+        'lat' => 0,
+    'long' => 0,
+    'ongkir' => 0,
         'status'            => 'dikemas',
         'status_pembayaran' => 'pending',
         'payment_method'    => 'midtrans',
     ]);
-    dd('ORDER TERBUAT', $order->id);
+
 
     // 2️⃣ SIMPAN ORDER ITEMS (DI SINI LETAKNYA)
     foreach ($keranjang as $item) {
-        $order->orderItems()->create([
-            'product_id' => $item->product_id,
-            'jumlah'     => $item->jumlah,
-            'harga'      => $item->product->Harga,
-            'subtotal'   => $item->jumlah * $item->product->Harga,
-        ]);
-    }
+    $order->orderItems()->create([
+        'produk_id'  => $item->product_id,
+        'kuantitas'  => $item->jumlah,
+        'subtotal'   => $item->jumlah * $item->product->Harga,
+    ]);
+}
+
 
     // 3️⃣ KURANGI STOK
     foreach ($keranjang as $item) {

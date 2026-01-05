@@ -81,6 +81,9 @@
         });
     });
 </script>
-{{ dd($snapToken) }}
+<script>
+    console.log("Snap Token:", "{{ $snapToken }}");
+</script>
+
 
 @endsection

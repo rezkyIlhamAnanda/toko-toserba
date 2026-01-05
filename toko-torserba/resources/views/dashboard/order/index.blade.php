@@ -31,7 +31,7 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ \Illuminate\Support\Str::substr($order->id, 0, 8) }}...</td>
                                     <td>{{ optional($order->pelanggan)->name ?? '-' }}</td>
-                                    <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                                     <td class="text-center">
                                         {{-- Form update status inline --}}
                                         <form action="{{ route('pesanan.updateStatus', $order->id) }}" method="POST">

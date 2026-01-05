@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -34,12 +34,15 @@ class AdminController extends Controller
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:admins,email',
             'password' => 'required|string|min:6|confirmed',
-            'phone'    => 'nullable|string|max:20',
+            'no_hp'    => 'nullable|string|max:20',
         ]);
+
+        $validated['password'] = Hash::make($validated['password']);
 
         Admin::create($validated);
 
-        return redirect()->route('admin.index')->with('success', 'Admin berhasil ditambahkan.');
+        return redirect()->route('admin.index')
+            ->with('success', 'Admin berhasil ditambahkan.');
     }
 
     /**
@@ -48,7 +51,6 @@ class AdminController extends Controller
     public function edit(string $id)
     {
         $admin = Admin::findOrFail($id);
-
         return view('dashboard.admin.edit', compact('admin'));
     }
 
@@ -63,17 +65,20 @@ class AdminController extends Controller
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:admins,email,' . $admin->id,
             'password' => 'nullable|string|min:6|confirmed',
-            'phone'    => 'nullable|string|max:20',
+            'no_hp'    => 'nullable|string|max:20',
         ]);
 
         // kalau password kosong, jangan diupdate
-        if (empty($validated['password'])) {
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
             unset($validated['password']);
         }
 
         $admin->update($validated);
 
-        return redirect()->route('admin.index')->with('success', 'Admin berhasil diperbarui.');
+        return redirect()->route('admin.index')
+            ->with('success', 'Admin berhasil diperbarui.');
     }
 
     /**
@@ -84,6 +89,7 @@ class AdminController extends Controller
         $admin = Admin::findOrFail($id);
         $admin->delete();
 
-        return redirect()->route('admin.index')->with('success', 'Admin berhasil dihapus.');
+        return redirect()->route('admin.index')
+            ->with('success', 'Admin berhasil dihapus.');
     }
 }

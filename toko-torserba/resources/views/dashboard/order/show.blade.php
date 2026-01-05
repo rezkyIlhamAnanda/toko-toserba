@@ -26,12 +26,12 @@
                 @foreach ($order->keranjangs as $item)
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ $item->product->name ?? '-' }} (x{{ $item->jumlah ?? 1 }})
-                        <span>Rp {{ number_format(($item->product->price ?? 0) * ($item->jumlah ?? 1), 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format(($item->product->Harga ?? 0) * ($item->jumlah ?? 1), 0, ',', '.') }}</span>
                     </li>
                 @endforeach
             </ul>
 
-            <h5 class="text-end fw-bold">Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}</h5>
+            <h5 class="text-end fw-bold">Total: Rp {{ number_format($order->total, 0, ',', '.') }}</h5>
 
             @if(Auth::guard('admin')->check())
                 @include('pesanan._status')

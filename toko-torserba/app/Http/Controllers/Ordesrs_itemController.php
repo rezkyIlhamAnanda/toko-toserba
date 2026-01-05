@@ -11,7 +11,7 @@ class OrderController extends Controller
     public function index()
     {
         return response()->json(
-            Order::with('user')->get()
+            Order::with('pelanggan')->get()
         );
     }
 
@@ -19,28 +19,29 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'subtotal' => 'required|numeric|min:0',
-            'shipping_cost' => 'required|numeric|min:0',
-            'total_amount' => 'required|numeric|min:0',
-            'shipping_address' => 'required|string',
-            'shipping_status' => 'in:dikemas,dikirim,diterima',
-            'payment_status' => 'in:pending,paid,failed',
-            'payment_method' => 'nullable|string|max:50',
+            'pelanggan_id'     => 'required|exists:pelanggans,id',
+            'total'            => 'required|numeric|min:0',
+            'ongkir'           => 'required|numeric|min:0',
+            'lat'              => 'nullable|numeric',
+            'long'             => 'nullable|numeric',
+            'alamat'           => 'required|string',
+            'status'           => 'in:dikemas,dikirim,selesai',
+            'status_pembayaran'=> 'in:pending,paid,failed',
+            'payment_method'   => 'nullable|string|max:100',
         ]);
 
         $order = Order::create($validated);
 
         return response()->json([
             'message' => 'Pesanan berhasil dibuat',
-            'data' => $order->load('user')
+            'data' => $order->load('pelanggan')
         ], 201);
     }
 
     // Menampilkan detail pesanan
     public function show($id)
     {
-        $order = Order::with('user')->findOrFail($id);
+        $order = Order::with('pelanggan', 'orderItems.product')->findOrFail($id);
         return response()->json($order);
     }
 
@@ -50,20 +51,21 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         $validated = $request->validate([
-            'subtotal' => 'sometimes|numeric|min:0',
-            'shipping_cost' => 'sometimes|numeric|min:0',
-            'total_amount' => 'sometimes|numeric|min:0',
-            'shipping_address' => 'sometimes|string',
-            'shipping_status' => 'sometimes|in:dikemas,dikirim,diterima',
-            'payment_status' => 'sometimes|in:pending,paid,failed',
-            'payment_method' => 'nullable|string|max:50',
+            'total'            => 'sometimes|numeric|min:0',
+            'ongkir'           => 'sometimes|numeric|min:0',
+            'lat'              => 'sometimes|numeric',
+            'long'             => 'sometimes|numeric',
+            'alamat'           => 'sometimes|string',
+            'status'           => 'sometimes|in:dikemas,dikirim,selesai',
+            'status_pembayaran'=> 'sometimes|in:pending,paid,failed',
+            'payment_method'   => 'nullable|string|max:100',
         ]);
 
         $order->update($validated);
 
         return response()->json([
             'message' => 'Pesanan berhasil diperbarui',
-            'data' => $order->load('user')
+            'data' => $order->load('pelanggan', 'orderItems.product')
         ]);
     }
 

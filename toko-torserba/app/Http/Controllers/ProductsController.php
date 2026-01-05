@@ -24,10 +24,9 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
+            'nama_produk' => 'required|string|max:255',
+            'Harga'       => 'required|numeric|min:0',
+            'stok'        => 'required|integer|min:0',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -53,10 +52,9 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
 
         $validated = $request->validate([
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
+            'nama_produk' => 'required|string|max:255',
+            'Harga'       => 'required|numeric|min:0',
+            'stok'        => 'required|integer|min:0',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 

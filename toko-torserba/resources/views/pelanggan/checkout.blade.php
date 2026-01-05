@@ -21,13 +21,13 @@
                 <tbody>
                     @foreach ($keranjang as $item)
                         <tr>
-                            <td>{{ $item->product->name }}</td>
+                            <td>{{ $item->product->nama_produk }}</td>
                             <td>{{ $item->jumlah }}</td>
                             <td>
-                                Rp{{ number_format($item->product->price, 0, ',', '.') }}
+                                Rp{{ number_format($item->product->Harga, 0, ',', '.') }}
                             </td>
                             <td>
-                                Rp{{ number_format($item->jumlah * $item->product->price, 0, ',', '.') }}
+                                Rp{{ number_format($item->jumlah * $item->product->Harga, 0, ',', '.') }}
                             </td>
                         </tr>
                     @endforeach
@@ -45,6 +45,15 @@
             </div>
         </div>
     </div>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     {{-- Form Alamat Pengiriman --}}
     <form action="{{ route('checkout.process') }}" method="POST">
@@ -54,12 +63,12 @@
             <div class="card-body">
                 <h5>Alamat Pengiriman</h5>
                 <textarea
-                    name="address"
+                    name="alamat"
                     class="form-control"
                     rows="3"
                     placeholder="Masukkan alamat lengkap..."
                     required
-                >{{ old('address') }}</textarea>
+                >{{ old('alamat') }}</textarea>
             </div>
         </div>
 
@@ -69,4 +78,5 @@
         </button>
     </form>
 </div>
+
 @endsection

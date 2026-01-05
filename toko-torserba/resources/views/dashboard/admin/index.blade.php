@@ -33,7 +33,7 @@
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td>{{ $admin->name }}</td>
                                 <td>{{ $admin->email }}</td>
-                                <td>{{ $admin->phone ?? '-' }}</td>
+                                <td>{{ $admin->no_hp ?? '-' }}</td>
                                 <td class="text-center">
                                     <a href="{{ route('admin.edit', $admin->id) }}" class="btn btn-sm btn-warning rounded-3">Edit</a>
 

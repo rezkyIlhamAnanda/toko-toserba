@@ -26,9 +26,11 @@ class CheckoutController extends Controller
             return redirect()->route('pelanggan.home')->with('error', 'Keranjang Anda kosong.');
         }
 
-        $subtotal = $keranjang->sum(fn($item) => $item->product->price * $item->jumlah);
+        $subtotal = $keranjang->sum(fn($item) => $item->product->Harga * $item->jumlah);
         $shipping_cost = 0; // bisa diubah sesuai ongkir
         $total = $subtotal + $shipping_cost;
+
+
 
         return view('pelanggan.checkout', compact('keranjang', 'subtotal', 'total', 'user'));
     }
@@ -38,6 +40,11 @@ class CheckoutController extends Controller
      */
     public function process(Request $request)
 {
+
+
+    $request->validate([
+        'alamat' => 'required',
+    ]);
     $user = Auth::guard('pelanggan')->user();
 
     $keranjang = Keranjang::with('product')
@@ -50,65 +57,96 @@ class CheckoutController extends Controller
     }
 
     $subtotal = $keranjang->sum(fn ($item) =>
-        $item->product->price * $item->jumlah
+        $item->product->Harga * $item->jumlah
     );
 
     DB::beginTransaction();
 
-    try {
-        // 1️⃣ Simpan order (SESUAI FILLABLE)
-        $order = Order::create([
-            'id' => Str::uuid(),
-            'pelanggan_id'      => $user->id,
-            'subtotal'          => $subtotal,
-            'alamat'            => $request->address ?? 'Alamat belum diisi',
-            'status'            => 'dikemas',
-            'status_pembayaran' => 'pending',         
-            'payment_method'    => 'midtrans',
+try {
+    // 1️⃣ Simpan ORDER
+    $order = Order::create([
+        'pelanggan_id'      => $user->id,
+        'total'             => $subtotal,
+        'alamat'            => $request->alamat,
+        'status'            => 'dikemas',
+        'status_pembayaran' => 'pending',
+        'payment_method'    => 'midtrans',
+    ]);
+    dd('ORDER TERBUAT', $order->id);
+
+    // 2️⃣ SIMPAN ORDER ITEMS (DI SINI LETAKNYA)
+    foreach ($keranjang as $item) {
+        $order->orderItems()->create([
+            'product_id' => $item->product_id,
+            'jumlah'     => $item->jumlah,
+            'harga'      => $item->product->Harga,
+            'subtotal'   => $item->jumlah * $item->product->Harga,
         ]);
-
-        // 2️⃣ Kurangi stok produk
-        foreach ($keranjang as $item) {
-            $product = $item->product;
-
-            if ($product->stock < $item->jumlah) {
-                throw new \Exception("Stok produk {$product->name} tidak mencukupi");
-            }
-
-            $product->decrement('stock', $item->jumlah);
-        }
-
-        DB::commit();
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-
-        return redirect()->back()->with(
-            'error',
-            'Gagal memproses pesanan: ' . $e->getMessage()
-        );
     }
 
+    // 3️⃣ KURANGI STOK
+    foreach ($keranjang as $item) {
+        $product = $item->product;
+
+        if ($product->stok < $item->jumlah) {
+            throw new \Exception("Stok produk {$product->nama_produk} tidak mencukupi");
+        }
+
+        $product->decrement('stok', $item->jumlah);
+    }
+
+    // 4️⃣ COMMIT
+    DB::commit();
+
+    // 5️⃣ KOSONGKAN KERANJANG
+    Keranjang::where('user_id', $user->id)->delete();
+
+} catch (\Exception $e) {
+    DB::rollBack();
+
+    return redirect()->back()->with(
+        'error',
+        'Gagal memproses pesanan: ' . $e->getMessage()
+    );
+}
+
+
     // 3️⃣ Midtrans Config
-    Config::$serverKey = config('midtrans.server_key');
-    Config::$isProduction = config('midtrans.is_production');
-    Config::$isSanitized = true;
-    Config::$is3ds = true;
+    // MIDTRANS CONFIG
+Config::$serverKey = config('midtrans.server_key');
+Config::$isProduction = config('midtrans.is_production');
+Config::$isSanitized = true;
+Config::$is3ds = true;
 
-    $params = [
-        'transaction_details' => [
-            'order_id' => $order->id,
-            'gross_amount' => $order->subtotal, // ⬅️ pakai subtotal
-        ],
-        'customer_details' => [
-            'first_name' => $user->name,
-            'email' => $user->email,
-        ],
-    ];
+$midtransOrderId = 'ORDER-' . $order->id;
 
+// SIMPAN KE DATABASE
+$order->update([
+    'midtrans_order_id' => $midtransOrderId
+]);
+
+dd($order->midtrans_order_id, $order->total);
+
+
+$params = [
+    'transaction_details' => [
+        'order_id' => $midtransOrderId,
+        'gross_amount' => (int) $order->total,
+    ],
+    'customer_details' => [
+        'first_name' => $user->nama,
+        'email' => $user->email,
+    ],
+];
+
+try {
     $snapToken = Snap::getSnapToken($params);
+} catch (\Exception $e) {
+    dd('MIDTRANS ERROR: ' . $e->getMessage());
+}
 
-    return view('pelanggan.pembayaran', compact('snapToken', 'order'));
+return view('pelanggan.pembayaran', compact('snapToken', 'order'));
+
 }
 
 
@@ -121,7 +159,8 @@ class CheckoutController extends Controller
         $hashed = hash('sha512', $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
 
         if ($hashed === $request->signature_key) {
-            $order = Order::where('id', $request->order_id)->first();
+            $order = Order::where('midtrans_order_id', $request->order_id)->first();
+
 
             if (!$order) {
                 return response()->json(['error' => 'Order tidak ditemukan'], 404);
@@ -129,11 +168,11 @@ class CheckoutController extends Controller
 
             if (in_array($request->transaction_status, ['capture', 'settlement'])) {
                 $order->update([
-                    'payment_status' => 'paid',
+                    'status_pembayaran' => 'paid',
                     'payment_method' => $request->payment_type,
                 ]);
             } elseif (in_array($request->transaction_status, ['deny', 'cancel', 'expire'])) {
-                $order->update(['payment_status' => 'failed']);
+                $order->update(['status_pembayaran' => 'failed']);
             }
         }
 

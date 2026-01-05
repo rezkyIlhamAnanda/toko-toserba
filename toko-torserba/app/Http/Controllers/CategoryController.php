@@ -25,19 +25,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
         ]);
-
-        if ($request->hasFile('image')) {
-            $filename = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/categories'), $filename);
-            $validated['image'] = $filename;
-        }
 
         Category::create($validated);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dibuat!');
+        return redirect()->route('categories.index')
+            ->with('success', 'Kategori berhasil dibuat!');
     }
 
     // Mengupdate kategori
@@ -46,38 +40,22 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
 
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
         ]);
-
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($category->image && file_exists(public_path('images/categories/' . $category->image))) {
-                unlink(public_path('images/categories/' . $category->image));
-            }
-
-            $filename = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images/categories'), $filename);
-            $validated['image'] = $filename;
-        }
 
         $category->update($validated);
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diperbarui!');
+        return redirect()->route('categories.index')
+            ->with('success', 'Kategori berhasil diperbarui!');
     }
 
     // Menghapus kategori
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
-
-        // Hapus gambar jika ada
-        if ($category->image && file_exists(public_path('images/categories/' . $category->image))) {
-            unlink(public_path('images/categories/' . $category->image));
-        }
-
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus!');
+        return redirect()->route('categories.index')
+            ->with('success', 'Kategori berhasil dihapus!');
     }
 }

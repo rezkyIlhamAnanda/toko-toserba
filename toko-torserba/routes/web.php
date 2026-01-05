@@ -39,9 +39,9 @@ Route::prefix('admin')->group(function () {
     Route::resource('/transaksi', TransactionController::class);
 
     // Pesanan & Transaksi
-    Route::get('/pesanan', [OrderController::class, 'adminIndex'])->name('pesanan.index');
-    Route::get('/pesanan/{id}', [OrderController::class, 'adminShow'])->name('pesanan.show');
-    Route::put('/pesanan/{id}/status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
+    Route::get('/pesanan', [OrderController::class, 'adminIndex']nShow'])->name('pesanan.show');
+    Route::put('/pesanan/{id}/status', [OrderController::class)->name('pesanan.index');
+    Route::get('/pesanan/{id}', [OrderController::class, 'admi, 'updateStatus'])->name('pesanan.updateStatus');
 
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/{id}', [TransactionController::class, 'show'])->name('transaksi.show');
@@ -80,8 +80,8 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     // // Checkout & Pesanan (pakai OrderController)
     // Route::get('/checkout', [OrderController::class, 'create'])->name('checkout.index');
     // Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
 
     // Riwayat pesanan pelanggan
     Route::get('/pesanan-saya', [OrderController::class, 'userOrders'])->name('pelanggan.pesanan');

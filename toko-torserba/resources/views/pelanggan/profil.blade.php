@@ -26,7 +26,7 @@
                         </tr>
                         <tr>
                             <th>No. HP</th>
-                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->no_hp }}</td>
                         </tr>
                         <tr>
                             <th>Alamat</th>

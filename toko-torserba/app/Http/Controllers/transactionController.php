@@ -2,26 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Models\FinancialTransaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-
 
 class TransactionController extends Controller
 {
     // Menampilkan semua transaksi
     public function index(Request $request)
     {
-        $query = Transaction::with('user');
+        $query = FinancialTransaction::with('order');
 
         // Filter berdasarkan type
         if ($request->has('type') && $request->type !== null) {
             $query->where('type', $request->type);
         }
 
-        $transactions = $query->orderBy('transaction_date', 'desc')->paginate(10);
+        $transactions = $query->orderBy('tanggal', 'desc')->paginate(10);
 
         return view('dashboard.transaction.index', compact('transactions'));
     }
@@ -36,11 +32,15 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required|in:income,expense',
-            'category' => 'required|string|max:100',
-            'amount' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'transaction_date' => 'required|date'
+            'type'     => 'required|in:income,expense',
+            'order_id' => 'required|exists:orders,id',
+            'tanggal'  => 'required|date',
+        ]);
+
+        FinancialTransaction::create([
+            'type'     => $request->type,
+            'order_id' => $request->order_id,
+            'tanggal'  => $request->tanggal,
         ]);
 
         return redirect()->route('transaksi.index')
@@ -50,7 +50,7 @@ class TransactionController extends Controller
     // Menampilkan detail transaksi
     public function show($id)
     {
-        $transaction = Transaction::with('user')->findOrFail($id);
+        $transaction = FinancialTransaction::with('order')->findOrFail($id);
 
         return view('dashboard.transaction.show', compact('transaction'));
     }
@@ -58,7 +58,7 @@ class TransactionController extends Controller
     // Menampilkan form edit
     public function edit($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        $transaction = FinancialTransaction::findOrFail($id);
 
         return view('dashboard.transaction.edit', compact('transaction'));
     }
@@ -67,21 +67,17 @@ class TransactionController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'type' => 'required|in:income,expense',
-            'category' => 'required|string|max:100',
-            'amount' => 'required|numeric|min:0',
-            'description' => 'nullable|string',
-            'transaction_date' => 'required|date'
+            'type'     => 'required|in:income,expense',
+            'order_id' => 'required|exists:orders,id',
+            'tanggal'  => 'required|date',
         ]);
 
-        $transaction = Transaction::findOrFail($id);
+        $transaction = FinancialTransaction::findOrFail($id);
 
         $transaction->update([
-            'type' => $request->type,
-            'category' => $request->category,
-            'amount' => $request->amount,
-            'description' => $request->description,
-            'transaction_date' => $request->transaction_date
+            'type'     => $request->type,
+            'order_id' => $request->order_id,
+            'tanggal'  => $request->tanggal,
         ]);
 
         return redirect()->route('transaksi.index')
@@ -91,7 +87,7 @@ class TransactionController extends Controller
     // Hapus transaksi
     public function destroy($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        $transaction = FinancialTransaction::findOrFail($id);
         $transaction->delete();
 
         return redirect()->route('transaksi.index')

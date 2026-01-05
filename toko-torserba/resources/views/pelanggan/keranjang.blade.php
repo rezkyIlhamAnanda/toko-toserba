@@ -42,12 +42,12 @@
 
                             {{-- Harga --}}
                             <td class="text-center text-success">
-                                Rp {{ number_format($item->product->price, 0, ',', '.') }}
+                                Rp {{ number_format($item->product->Harga, 0, ',', '.') }}
                             </td>
 
                             {{-- Stok --}}
                             <td class="text-center">
-                                {{ $item->product->stock ?? '0' }}
+                                {{ $item->product->stok ?? '0' }}
                             </td>
 
                             {{-- Jumlah --}}
@@ -73,7 +73,7 @@
 
                             {{-- Total --}}
                             <td class="text-center fw-bold text-success">
-                                Rp {{ number_format($item->product->price * $item->jumlah, 0, ',', '.') }}
+                                Rp {{ number_format($item->product->Harga * $item->jumlah, 0, ',', '.') }}
                             </td>
 
                             {{-- Aksi --}}
@@ -98,7 +98,7 @@
                 <h5 class="m-0">
                     Total Belanja:
                     <span class="fw-bold text-success">
-                        Rp {{ number_format($keranjang->sum(fn($i) => $i->product->price * $i->jumlah), 0, ',', '.') }}
+                        Rp {{ number_format($keranjang->sum(fn($i) => $i->product->Harga * $i->jumlah), 0, ',', '.') }}
                     </span>
                 </h5>
                 <a href="{{ route('checkout.index') }}" class="btn btn-success px-4 py-2">

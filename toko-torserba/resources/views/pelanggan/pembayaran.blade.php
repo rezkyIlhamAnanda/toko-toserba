@@ -20,36 +20,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($order->keranjangs as $item)
-                    <tr>
-                        <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->jumlah }}</td>
-                        <td>Rp{{ number_format($item->product->price, 0, ',', '.') }}</td>
-                        <td>Rp{{ number_format($item->jumlah * $item->product->price, 0, ',', '.') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
+@foreach($order->orderItems as $item)
+<tr>
+    <td>{{ $item->product->nama_produk }}</td>
+    <td>{{ $item->jumlah }}</td>
+    <td>Rp{{ number_format($item->harga, 0, ',', '.') }}</td>
+    <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+</tr>
+@endforeach
+</tbody>
+
             </table>
 
             <hr>
 
-            <div class="d-flex justify-content-between">
+            {{-- <div class="d-flex justify-content-between">
                 <span>Subtotal:</span>
                 <span>Rp{{ number_format($order->subtotal, 0, ',', '.') }}</span>
             </div>
             <div class="d-flex justify-content-between">
                 <span>Ongkir:</span>
                 <span>Rp{{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
-            </div>
+            </div> --}}
             <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
                 <span>Total:</span>
-                <span>Rp{{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                <span>Rp{{ number_format($order->total, 0, ',', '.') }}</span>
             </div>
 
             <hr>
             <div>
                 <strong>Alamat Pengiriman:</strong>
-                <p>{{ $order->shipping_address }}</p>
+                <p>{{ $order->alamat }}</p>
             </div>
         </div>
     </div>
@@ -80,4 +81,6 @@
         });
     });
 </script>
+{{ dd($snapToken) }}
+
 @endsection

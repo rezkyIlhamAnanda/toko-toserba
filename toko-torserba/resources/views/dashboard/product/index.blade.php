@@ -32,12 +32,12 @@
                         @forelse ($products as $product)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>{{ $product->name }}</td>
-                                <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                                <td>{{ $product->stock }}</td>
+                                <td>{{ $product->nama_produk }}</td>
+                                <td>Rp {{ number_format($product->Harga, 0, ',', '.') }}</td>
+                                <td>{{ $product->stok }}</td>
                                 <td class="text-center">
                                     @if ($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="Gambar {{ $product->name }}" width="60" class="img-thumbnail">
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="Gambar {{ $product->nama_produk }}" width="60" class="img-thumbnail">
                                     @else
                                         <span class="text-muted">-</span>
                                     @endif

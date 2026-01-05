@@ -54,8 +54,8 @@
                         <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/no-image.png') }}"
                              class="img-fluid mb-2"
                              style="height:200px; object-fit:cover; border-radius:10px;">
-                        <p class="fw-semibold">{{ $product->name }}</p>
-                        <p class="text-success fw-bold">Rp {{ number_format($product->price,0,',','.') }}</p>
+                        <p class="fw-semibold">{{ $product->nama_produk }}</p>
+                        <p class="text-success fw-bold">Rp {{ number_format($product->Harga,0,',','.') }}</p>
                         <a href="{{ route('produk.show', $product->id) }}" class="btn btn-success">Beli</a>
                     </div>
                     @empty

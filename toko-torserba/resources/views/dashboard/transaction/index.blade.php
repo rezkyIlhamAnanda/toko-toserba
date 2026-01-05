@@ -32,10 +32,10 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $trx->transaction_code }}</td>
                                     <td>{{ $trx->user->name }}</td>
-                                    <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($trx->total, 0, ',', '.') }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $trx->payment_status == 'paid' ? 'success' : ($trx->payment_status == 'pending' ? 'warning' : 'danger') }}">
-                                            {{ ucfirst($trx->payment_status) }}
+                                        <span class="badge bg-{{ $trx->status_pembayaran == 'paid' ? 'success' : ($trx->status_pembayaran == 'pending' ? 'warning' : 'danger') }}">
+                                            {{ ucfirst($trx->status_pembayaran) }}
                                         </span>
                                     </td>
                                     <td>{{ $trx->payment_method ?? '-' }}</td>

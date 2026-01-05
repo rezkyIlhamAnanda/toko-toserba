@@ -17,12 +17,12 @@
                 <dd class="col-sm-9">{{ $transaction->user->name }}</dd>
 
                 <dt class="col-sm-3">Total</dt>
-                <dd class="col-sm-9">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</dd>
+                <dd class="col-sm-9">Rp {{ number_format($transaction->total, 0, ',', '.') }}</dd>
 
                 <dt class="col-sm-3">Status Pembayaran</dt>
                 <dd class="col-sm-9">
-                    <span class="badge bg-{{ $transaction->payment_status == 'paid' ? 'success' : ($transaction->payment_status == 'pending' ? 'warning' : 'danger') }}">
-                        {{ ucfirst($transaction->payment_status) }}
+                    <span class="badge bg-{{ $transaction->status_pembayaran == 'paid' ? 'success' : ($transaction->status_pembayaran == 'pending' ? 'warning' : 'danger') }}">
+                        {{ ucfirst($transaction->status_pembayaran) }}
                     </span>
                 </dd>
 

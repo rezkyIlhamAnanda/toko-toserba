@@ -57,9 +57,9 @@
 
                         {{-- Nomor HP --}}
                         <div class="mb-3">
-                            <label for="phone" class="form-label text-dark">Nomor HP</label>
-                            <input type="text" name="phone" class="form-control rounded-3"
-                                   placeholder="Masukkan nomor HP" value="{{ old('phone') }}">
+                            <label for="no_hp" class="form-label text-dark">Nomor HP</label>
+                            <input type="text" name="no_hp" class="form-control rounded-3"
+                                   placeholder="Masukkan nomor HP" value="{{ old('no_hp') }}">
                         </div>
 
                         {{-- Tombol --}}

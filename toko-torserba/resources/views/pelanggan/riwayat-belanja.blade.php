@@ -14,15 +14,15 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Order ID: {{ $order->id }}</span>
                 <span class="badge
-                    {{ $order->payment_status == 'paid' ? 'bg-success' : ($order->payment_status == 'pending' ? 'bg-warning text-dark' : 'bg-danger') }}">
-                    {{ ucfirst($order->payment_status) }}
+                    {{ $order->status_pembayaran == 'paid' ? 'bg-success' : ($order->status_pembayaran == 'pending' ? 'bg-warning text-dark' : 'bg-danger') }}">
+                    {{ ucfirst($order->status_pembayaran) }}
                 </span>
             </div>
 
             <div class="card-body">
                 <p><strong>Tanggal:</strong> {{ $order->created_at->format('d M Y H:i') }}</p>
-                <p><strong>Total:</strong> Rp{{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                <p><strong>Alamat Pengiriman:</strong> {{ $order->shipping_address }}</p>
+                <p><strong>Total:</strong> Rp{{ number_format($order->total, 0, ',', '.') }}</p>
+                <p><strong>Alamat Pengiriman:</strong> {{ $order->alamat }}</p>
 
                 {{-- Alur Pengiriman --}}
                 <div class="mt-3">

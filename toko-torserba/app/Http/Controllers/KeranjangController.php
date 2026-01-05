@@ -25,7 +25,7 @@ class KeranjangController extends Controller
 
         // Cek apakah produk sudah ada di keranjang user
         $keranjang = Keranjang::where('user_id', Auth::guard('pelanggan')->id())
-            ->where('product_id', $product_id)
+            ->where('produk_id', $product_id)
             ->first();
 
         if ($keranjang) {
@@ -36,9 +36,9 @@ class KeranjangController extends Controller
             // Jika belum ada, buat data baru
             Keranjang::create([
                 'user_id'    => Auth::guard('pelanggan')->id(),
-                'product_id' => $product_id,
+                'produk_id'  => $product_id,
                 'jumlah'     => $request->jumlah,
-                'harga'      => $product->price,
+                'Harga'      => $product->Harga,
             ]);
         }
 

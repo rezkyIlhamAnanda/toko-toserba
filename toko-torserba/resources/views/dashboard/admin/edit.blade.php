@@ -51,9 +51,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Nomor HP</label>
-                            <input type="text" name="phone" class="form-control rounded-3"
-                                   value="{{ old('phone', $admin->phone) }}">
+                            <label for="no_hp" class="form-label">Nomor HP</label>
+                            <input type="text" name="no_hp" class="form-control rounded-3"
+                                   value="{{ old('no_hp', $admin->no_hp) }}">
                         </div>
 
                         {{-- 🔴 Tombol disamakan dengan warna sidebar --}}

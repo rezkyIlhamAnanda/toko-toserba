@@ -22,7 +22,7 @@ class OrderController extends Controller
     public function adminShow($id)
     {
         // Detail order untuk admin
-        $order = Order::with('keranjangs.product', 'pelanggan')->findOrFail($id);
+        $order = Order::with('orderItems.product', 'pelanggan')->findOrFail($id);
 
         return view('dashboard.order.show', compact('order'));
     }
@@ -51,7 +51,7 @@ class OrderController extends Controller
 
         $order = Order::where('id', $id)
                       ->where('pelanggan_id', $user->id)
-                      ->with('keranjangs.product')
+                      ->with('orderItems.product')
                       ->firstOrFail();
 
         return view('pelanggan.struk', compact('order'));
@@ -61,18 +61,17 @@ class OrderController extends Controller
     // Update status pesanan (admin)
     // =========================
     public function updateStatus(Request $request, $id)
-{
-    $order = Order::findOrFail($id);
+    {
+        $order = Order::findOrFail($id);
 
-    $validated = $request->validate([
-        'shipping_status' => 'required|in:dikemas,dikirim,diterima',
-    ]);
+        $validated = $request->validate([
+            'status' => 'required|in:dikemas,dikirim,selesai', // sesuai kolom model
+        ]);
 
-    $order->update($validated);
+        $order->update($validated);
 
-    return redirect()->route('pesanan.index')->with('success', 'Status pengiriman berhasil diperbarui');
-}
-
+        return redirect()->route('pesanan.index')->with('success', 'Status pengiriman berhasil diperbarui');
+    }
 
     // Opsional: Hapus order (admin)
     public function destroy($id)

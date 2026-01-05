@@ -12,9 +12,9 @@ class DashboardController extends Controller
 {
     // Statistik
     $totalProducts = Product::count();
-    $pendingOrders = Order::where('payment_status', 'pending')->count();
-    $completedOrders = Order::where('payment_status', 'paid')->count();
-    $totalRevenue = Order::where('payment_status', 'paid')->sum('total_amount');
+    $pendingOrders = Order::where('status_pembayaran', 'pending')->count();
+    $completedOrders = Order::where('status_pembayaran', 'paid')->count();
+    $totalRevenue = Order::where('status_pembayaran', 'paid')->sum('total');
 
     // Pesanan terbaru
     $latestOrders = Order::latest()->take(5)->get();

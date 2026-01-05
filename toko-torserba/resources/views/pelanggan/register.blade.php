@@ -18,7 +18,7 @@
                 @csrf
 
                 <div class="mb-3">
-                    <input type="text" name="name" class="form-control" placeholder="Nama Lengkap" required>
+                    <input type="text" name="nama" class="form-control" placeholder="Nama Lengkap" required>
                 </div>
 
                 <div class="mb-3">
@@ -26,11 +26,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <input type="text" name="phone" class="form-control" placeholder="No. HP">
+                    <input type="text" name="no_hp" class="form-control" placeholder="No. HP">
                 </div>
 
                 <div class="mb-3">
-                    <textarea name="address" class="form-control" placeholder="Alamat" rows="2"></textarea>
+                    <textarea name="alamat" class="form-control" placeholder="Alamat" rows="2"></textarea>
                 </div>
 
                 <div class="mb-3">

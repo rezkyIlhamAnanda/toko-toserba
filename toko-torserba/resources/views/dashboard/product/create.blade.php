@@ -28,21 +28,21 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nama Produk</label>
-                            <input type="text" name="name" class="form-control rounded-3"
-                                   placeholder="Masukkan nama produk" value="{{ old('name') }}" required>
+                            <label for="nama_produk" class="form-label">Nama Produk</label>
+                            <input type="text" name="nama_produk" class="form-control rounded-3"
+                                   placeholder="Masukkan nama produk" value="{{ old('nama_produk') }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="price" class="form-label">Harga</label>
-                            <input type="number" name="price" class="form-control rounded-3"
-                                   placeholder="Masukkan harga" value="{{ old('price') }}" required>
+                            <label for="Harga" class="form-label">Harga</label>
+                            <input type="number" name="Harga" class="form-control rounded-3"
+                                   placeholder="Masukkan Harga" value="{{ old('Harga') }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="stock" class="form-label">Stok</label>
-                            <input type="number" name="stock" class="form-control rounded-3"
-                                   placeholder="Masukkan jumlah stok" value="{{ old('stock') }}" required>
+                            <label for="stok" class="form-label">Stok</label>
+                            <input type="number" name="stok" class="form-control rounded-3"
+                                   placeholder="Masukkan jumlah stok" value="{{ old('stok') }}" required>
                         </div>
 
                         <div class="mb-3">
@@ -50,11 +50,7 @@
                             <input type="file" name="image" class="form-control rounded-3" accept="image/*">
                         </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi</label>
-                            <textarea name="description" rows="3" class="form-control rounded-3"
-                                      placeholder="Masukkan deskripsi produk">{{ old('description') }}</textarea>
-                        </div>
+
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('products.index') }}" class="btn btn-secondary rounded-3">Kembali</a>

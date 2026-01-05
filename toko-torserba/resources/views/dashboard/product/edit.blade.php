@@ -33,7 +33,7 @@
                             <label for="name" class="form-label text-secondary fw-semibold">Nama Produk</label>
                             <input type="text" name="name" id="name"
                                    class="form-control rounded-3 @error('name') is-invalid @enderror"
-                                   value="{{ old('name', $product->name) }}" placeholder="Masukkan nama produk" required>
+                                   value="{{ old('name', $product->nama_produk) }}" placeholder="Masukkan nama produk" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -52,22 +52,22 @@
 
                         {{-- Harga --}}
                         <div class="mb-3">
-                            <label for="price" class="form-label text-secondary fw-semibold">Harga</label>
-                            <input type="number" name="price" id="price"
-                                   class="form-control rounded-3 @error('price') is-invalid @enderror"
-                                   value="{{ old('price', $product->price) }}" placeholder="Contoh: 50000" required>
-                            @error('price')
+                            <label for="Harga" class="form-label text-secondary fw-semibold">Harga</label>
+                            <input type="number" name="Harga" id="Harga"
+                                   class="form-control rounded-3 @error('Harga') is-invalid @enderror"
+                                   value="{{ old('Harga', $product->Harga) }}" placeholder="Contoh: 50000" required>
+                            @error('Harga')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         {{-- Stok --}}
                         <div class="mb-3">
-                            <label for="stock" class="form-label text-secondary fw-semibold">Stok</label>
-                            <input type="number" name="stock" id="stock"
-                                   class="form-control rounded-3 @error('stock') is-invalid @enderror"
-                                   value="{{ old('stock', $product->stock) }}" placeholder="Jumlah stok" required>
-                            @error('stock')
+                            <label for="stok" class="form-label text-secondary fw-semibold">Stok</label>
+                            <input type="number" name="stok" id="stok"
+                                   class="form-control rounded-3 @error('stok') is-invalid @enderror"
+                                   value="{{ old('stok', $product->stok) }}" placeholder="Jumlah stok" required>
+                            @error('stok')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

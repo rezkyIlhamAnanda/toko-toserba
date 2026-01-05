@@ -18,7 +18,7 @@
                     <select name="product_id" id="product_id" class="form-select @error('product_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Produk --</option>
                         @foreach($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            <option value="{{ $product->id }}">{{ $product->nama_produk }}</option>
                         @endforeach
                     </select>
                     @error('product_id')

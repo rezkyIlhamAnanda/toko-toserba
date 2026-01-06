@@ -29,8 +29,8 @@
                     <strong>Status Pengiriman:</strong>
                     <div class="d-flex align-items-center justify-content-between position-relative mt-4" style="max-width: 400px; margin: 0 auto;">
                         @php
-                            $steps = ['dikemas', 'dikirim', 'diterima'];
-                            $currentIndex = array_search($order->shipping_status, $steps);
+                            $steps = ['dikemas', 'dikirim', 'selesai'];
+                            $currentIndex = array_search($order->status, $steps);
                         @endphp
 
                         @foreach($steps as $index => $step)

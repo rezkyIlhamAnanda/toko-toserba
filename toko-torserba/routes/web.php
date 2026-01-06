@@ -88,6 +88,7 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     // ================= CHECKOUT =================
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/midtrans/callback', [CheckoutController::class, 'callback']);
 
     // ================= PESANAN PELANGGAN =================
     Route::get('/pesanan-saya', [OrderController::class, 'userOrders'])->name('pelanggan.pesanan');

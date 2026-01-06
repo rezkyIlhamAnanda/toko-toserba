@@ -47,26 +47,10 @@
 
                             {{-- Stok --}}
                             <td class="text-center">
-                                {{ $item->product->stok ?? '0' }}
+                                {{ $item->product->stok ?? 0 }}
                             </td>
 
                             {{-- Jumlah --}}
-                            {{-- <td class="text-center">
-                                <form action="{{ route('keranjang.update', $item->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="input-group input-group-sm justify-content-center" style="width:120px;">
-                                        <input type="number" name="jumlah" value="{{ $item->jumlah }}" min="1"
-                                               max="{{ $item->product->stok }}"
-                                               class="form-control text-center">
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </td> --}}
-
-                            {{-- Jumlah (tanpa edit) --}}
                             <td class="text-center">
                                 {{ $item->jumlah }}
                             </td>
@@ -101,13 +85,45 @@
                         Rp {{ number_format($keranjang->sum(fn($i) => $i->product->Harga * $i->jumlah), 0, ',', '.') }}
                     </span>
                 </h5>
-                <a href="{{ route('checkout.index') }}" class="btn btn-success px-4 py-2">
+
+                {{-- TOMBOL CHECKOUT (tidak diubah tampilannya) --}}
+                <button id="btn-checkout" class="btn btn-success px-4 py-2">
                     Lanjut ke Pembayaran
-                </a>
+                </button>
             </div>
         @endif
     </div>
 </section>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('btn-checkout')?.addEventListener('click', function () {
+
+    let error = false;
+    let pesan = '';
+
+    @foreach($keranjang as $item)
+        if ({{ $item->jumlah }} > {{ $item->product->stok ?? 0 }}) {
+            error = true;
+            pesan += 'Stok produk "{{ $item->product->nama_produk }}" tidak mencukupi.\n';
+        }
+    @endforeach
+
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Stok Tidak Cukup',
+            text: pesan,
+            confirmButtonColor: '#198754'
+        });
+        return;
+    }
+
+    window.location.href = "{{ route('checkout.index') }}";
+});
+</script>
 
 <style>
 .table thead th, .table tbody td {

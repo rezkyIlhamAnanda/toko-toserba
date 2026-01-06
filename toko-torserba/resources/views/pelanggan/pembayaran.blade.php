@@ -20,28 +20,33 @@
                     </tr>
                 </thead>
                 <tbody>
-@foreach($order->orderItems as $item)
-<tr>
-    <td>{{ $item->product->nama_produk }}</td>
-    <td>{{ $item->jumlah }}</td>
-    <td>Rp{{ number_format($item->harga, 0, ',', '.') }}</td>
-    <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td>
-</tr>
-@endforeach
-</tbody>
+                    @foreach($order->orderItems as $item)
+                    <tr>
+                        <td>{{ $item->product->nama_produk }}</td>
+                        <td>{{ $item->kuantitas }}</td>
+                        <td>Rp{{ number_format($item->product->Harga, 0, ',', '.') }}</td>
+                        <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+
 
             </table>
 
             <hr>
 
-            {{-- <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between">
                 <span>Subtotal:</span>
-                <span>Rp{{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                <span>
+                    Rp{{ number_format($order->orderItems->sum('subtotal'), 0, ',', '.') }}
+                </span>
             </div>
+
             <div class="d-flex justify-content-between">
                 <span>Ongkir:</span>
-                <span>Rp{{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
-            </div> --}}
+                <span>Rp{{ number_format($order->ongkir, 0, ',', '.') }}</span>
+            </div>
+
             <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
                 <span>Total:</span>
                 <span>Rp{{ number_format($order->total, 0, ',', '.') }}</span>

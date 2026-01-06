@@ -40,9 +40,10 @@ Route::prefix('admin')->group(function () {
     Route::resource('/transaksi', TransactionController::class);
 
     // ================= PESANAN =================
+Route::put('/pesanan/{id}/status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
     Route::get('/pesanan', [OrderController::class, 'adminIndex'])->name('pesanan.index');
     Route::get('/pesanan/{id}', [OrderController::class, 'adminShow'])->name('pesanan.show');
-    Route::put('/pesanan/{id}/status', [OrderController::class, 'updateStatus'])->name('pesanan.updateStatus');
+
 
     // ================= TRANSAKSI =================
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transaksi.index');

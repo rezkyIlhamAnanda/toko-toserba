@@ -30,17 +30,17 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ \Illuminate\Support\Str::substr($order->id, 0, 8) }}...</td>
-                                    <td>{{ optional($order->pelanggan)->name ?? '-' }}</td>
+                                    <td>{{ optional($order->pelanggan)->nama ?? '-' }}</td>
                                     <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
                                     <td class="text-center">
                                         {{-- Form update status inline --}}
                                         <form action="{{ route('pesanan.updateStatus', $order->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
-                                            <select name="shipping_status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                                <option value="dikemas" {{ $order->shipping_status == 'dikemas' ? 'selected' : '' }}>Dikemas</option>
-                                                <option value="dikirim" {{ $order->shipping_status == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
-                                                <option value="diterima" {{ $order->shipping_status == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                <option value="dikemas" {{ $order->status == 'dikemas' ? 'selected' : '' }}>Dikemas</option>
+                                                <option value="dikirim" {{ $order->status == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                                                <option value="diterima" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                             </select>
                                         </form>
                                     </td>

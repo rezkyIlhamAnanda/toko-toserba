@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container py-4">
-    <h2 class="mb-4 text-center">Struk Belanja</h2>
+    <h2 class="mb-4 text-center">Detail Belanja</h2>
 
     {{-- Info Order --}}
     <div class="card mb-4 shadow-sm">
@@ -57,10 +57,10 @@
                 <span>Ongkir:</span>
                 <span>Rp{{ number_format($order->ongkir, 0, ',', '.') }}</span>
             </div>
-            <div class="d-flex justify-content-between">
+            {{-- <div class="d-flex justify-content-between">
                 <span>Subtotal:</span>
                 <span>Rp{{ number_format($order->total, 0, ',', '.') }}</span>
-            </div>
+            </div> --}}
 
             <div class="d-flex justify-content-between fw-bold fs-5 mt-2">
                 <span>Total:</span>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -54,7 +55,7 @@ class OrderController extends Controller
                       ->with('orderItems.product')
                       ->firstOrFail();
 
-        return view('pelanggan.struk', compact('order'));
+        return view('pelanggan.detail-belanja', compact('order'));
     }
 
     // =========================
@@ -81,4 +82,22 @@ class OrderController extends Controller
 
         return redirect()->route('pesanan.index')->with('success', 'Pesanan berhasil dihapus');
     }
+
+    public function cetakStruk($id)
+    {
+        $user = Auth::guard('pelanggan')->user();
+
+        $order = Order::where('id', $id)
+            ->where('pelanggan_id', $user->id)
+            ->with('orderItems.product')
+            ->firstOrFail();
+
+        $customPaper = [0, 0, 165, 1000];
+
+        $pdf = Pdf::loadView('pelanggan.struk-pdf', compact('order'))
+            ->setPaper($customPaper, 'portrait');
+
+        return $pdf->stream('struk-belanja-' . $order->id . '.pdf');
+    }
+
 }

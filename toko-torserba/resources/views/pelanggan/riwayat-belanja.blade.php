@@ -66,9 +66,17 @@
                     </div>
                 </div>
 
-                <a href="{{ route('checkout.struk', $order->id) }}" class="btn btn-primary mt-3 w-100">
-                    Lihat Struk
-                </a>
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{{ route('checkout.struk.pdf', $order->id) }}"
+                        class="btn btn-primary w-50"
+                        target="_blank">
+                        Lihat Struk
+                    </a>
+
+                    <a href="{{ route('detail-belanja', $order->id) }}" class="btn btn-outline-success w-50">
+                        Detail Belanja
+                    </a>
+                </div>
             </div>
         </div>
         @endforeach

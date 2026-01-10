@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     KeranjangController,
     CheckoutController,
     MidtransCallbackController,
+    ProfileController,
     SemuaProdukController
 };
 
@@ -99,5 +100,10 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::get('/detail-belanja{orderId}', [OrderController::class, 'userShow'])->name('detail-belanja');
 
     Route::get('/semua-produk', [SemuaProdukController::class, 'index'])->name('semua-produk.index');
+
+    Route::get('/profil', [ProfileController::class, 'index'])
+        ->name('pelanggan.profile');
+    Route::put('/profil/update', [ProfileController::class, 'update'])
+    ->name('pelanggan.profile.update');
 
 });

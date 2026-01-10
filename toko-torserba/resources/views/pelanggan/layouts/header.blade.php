@@ -9,7 +9,7 @@
             </div>
             <div class="header-right">
                 @if (session('username'))
-                    <a href="/detailpelanggan" style="color: #07582d; font-size: 16px; text-decoration: none;">
+                    <a href="{{ route('pelanggan.profile') }}" style="color: #07582d; font-size: 16px; text-decoration: none;">
                         <span class="me-2">
                             <i class="bi bi-person-fill" style="color: #07582d;" title="Akun"></i> {{ session('username') }}
                         </span>

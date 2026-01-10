@@ -10,85 +10,52 @@ class MidtransCallbackController extends Controller
 {
     public function callback(Request $request)
     {
-        // Ambil Server Key dari config
-        $serverKey = config('midtrans.server_key');
+        Log::info('Midtrans callback masuk', $request->all());
 
-        // Verifikasi signature
-        $hashed = hash("sha512", $request->order_id . $request->status_code . $request->gross_amount . $serverKey);
-
-        if ($hashed !== $request->signature_key) {
-            Log::error('Invalid Midtrans signature for order: ' . $request->order_id);
-            return response()->json(['status' => 'invalid signature'], 403);
-        }
-
-        // Cari order berdasarkan midtrans_order_id
         $order = Order::where('midtrans_order_id', $request->order_id)->first();
 
         if (!$order) {
             Log::error('Order not found: ' . $request->order_id);
-            return response()->json(['status' => 'order not found'], 404);
+            return response()->json(['order not found'], 404);
         }
 
-        // Update status berdasarkan transaction_status dari Midtrans
+        $serverKey = config('midtrans.server_key');
+
+        $hashed = hash(
+            'sha512',
+            $request->order_id .
+            $request->status_code .
+            number_format($order->total, 2, '.', '') .
+            $serverKey
+        );
+
+        if ($hashed !== $request->signature_key) {
+            Log::error('Invalid signature', [
+                'expected' => $hashed,
+                'received' => $request->signature_key,
+            ]);
+            return response()->json(['invalid signature'], 403);
+        }
+
         $transactionStatus = $request->transaction_status;
         $fraudStatus = $request->fraud_status ?? null;
 
-        Log::info('Midtrans callback received', [
-            'order_id' => $request->order_id,
-            'transaction_status' => $transactionStatus,
-            'fraud_status' => $fraudStatus,
-        ]);
-
-        if ($transactionStatus == 'capture') {
-            if ($fraudStatus == 'accept') {
-                // Transaksi berhasil (credit card)
-                $order->update([
-                    'status_pembayaran' => 'paid',
-                    'midtrans_transaction_id' => $request->transaction_id,
-                    'midtrans_transaction_status' => 'capture',
-                ]);
-                Log::info('Payment captured successfully for order: ' . $order->id);
-            }
-        } elseif ($transactionStatus == 'settlement') {
-            // Transaksi settlement (berhasil)
+        if (in_array($transactionStatus, ['settlement', 'capture'])) {
             $order->update([
                 'status_pembayaran' => 'paid',
+                'midtrans_transaction_status' => $transactionStatus,
                 'midtrans_transaction_id' => $request->transaction_id,
-                'midtrans_transaction_status' => 'settlement',
             ]);
-            Log::info('Payment settlement for order: ' . $order->id);
-
-        } elseif ($transactionStatus == 'pending') {
-            // Transaksi pending
+        } elseif ($transactionStatus === 'pending') {
             $order->update([
                 'status_pembayaran' => 'pending',
                 'midtrans_transaction_status' => 'pending',
             ]);
-            Log::info('Payment pending for order: ' . $order->id);
-
-        } elseif ($transactionStatus == 'deny') {
-            // Transaksi ditolak
+        } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
             $order->update([
                 'status_pembayaran' => 'failed',
-                'midtrans_transaction_status' => 'deny',
+                'midtrans_transaction_status' => $transactionStatus,
             ]);
-            Log::info('Payment denied for order: ' . $order->id);
-
-        } elseif ($transactionStatus == 'expire') {
-            // Transaksi kadaluarsa
-            $order->update([
-                'status_pembayaran' => 'failed',
-                'midtrans_transaction_status' => 'expire',
-            ]);
-            Log::info('Payment expired for order: ' . $order->id);
-
-        } elseif ($transactionStatus == 'cancel') {
-            // Transaksi dibatalkan
-            $order->update([
-                'status_pembayaran' => 'failed',
-                'midtrans_transaction_status' => 'cancel',
-            ]);
-            Log::info('Payment cancelled for order: ' . $order->id);
         }
 
         return response()->json(['status' => 'success']);

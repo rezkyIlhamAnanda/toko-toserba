@@ -71,8 +71,8 @@
     payButton.addEventListener('click', function () {
         snap.pay('{{ $snapToken }}', {
             onSuccess: function(result){
-                // Payment sukses → redirect ke halaman struk
-                window.location.href = '/checkout/struk/{{ $order->id }}';
+                // redirect ke detail belanja
+                window.location.href = "{{ route('detail-belanja', $order->id) }}";
             },
             onPending: function(result){
                 alert('Pembayaran masih pending');

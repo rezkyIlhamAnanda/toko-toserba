@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    // Menampilkan semua pesanan
     public function index()
     {
         return response()->json(
@@ -19,7 +18,6 @@ class OrderController extends Controller
         );
     }
 
-    // Menyimpan pesanan baru
     public function store(Request $request)
 {
     $validated = $request->validate([
@@ -36,10 +34,8 @@ class OrderController extends Controller
 
     $user = Auth::user();
 
-    // 🧾 Generate Midtrans Order ID (UNIK)
     $midtransOrderId = 'ORDER-' . time() . '-' . $user->id;
 
-    // 🧾 Simpan Order ke DB
     $order = Order::create([
         'pelanggan_id'       => $user->id,
         'total'              => $validated['total'],
@@ -50,16 +46,14 @@ class OrderController extends Controller
         'status'             => 'pending',
         'status_pembayaran'  => 'pending',
         'payment_method'     => 'midtrans',
-        'midtrans_order_id'  => $midtransOrderId, // ✅ penting
+        'midtrans_order_id'  => $midtransOrderId,
     ]);
 
-    // 🔧 Konfigurasi Midtrans
     Config::$serverKey = config('midtrans.server_key');
-    Config::$isProduction = false; // true jika production
+    Config::$isProduction = false;
     Config::$isSanitized = true;
     Config::$is3ds = true;
 
-    // 💳 Parameter Snap
     $params = [
         'transaction_details' => [
             'order_id' => $order->midtrans_order_id,
@@ -72,7 +66,6 @@ class OrderController extends Controller
         ],
     ];
 
-    // 🎟️ Generate Snap Token
     $snapToken = Snap::getSnapToken($params);
 
     return response()->json([

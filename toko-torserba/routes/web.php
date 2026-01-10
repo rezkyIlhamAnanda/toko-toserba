@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     HomepageController,
     KeranjangController,
     CheckoutController,
-    MidtransCallbackController
+    MidtransCallbackController,
+    SemuaProdukController
 };
 
 /*
@@ -96,4 +97,7 @@ Route::middleware(['auth:pelanggan'])->group(function () {
     Route::get('/riwayat-belanja', [OrderController::class, 'userOrders'])->name('riwayat-belanja');
     Route::get('/checkout/struk/pdf/{id}', [OrderController::class, 'cetakStruk'])->name('checkout.struk.pdf');
     Route::get('/detail-belanja{orderId}', [OrderController::class, 'userShow'])->name('detail-belanja');
+
+    Route::get('/semua-produk', [SemuaProdukController::class, 'index'])->name('semua-produk.index');
+
 });

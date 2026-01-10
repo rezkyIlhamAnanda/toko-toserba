@@ -54,15 +54,21 @@
             </div>
             <div class="swiper product-swiper">
                 <div class="swiper-wrapper">
-                    @forelse($products as $product)
+                    @forelse($products->take(5) as $product)
                     <div class="swiper-slide">
                         <div class="product-card text-center">
                             <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/no-image.png') }}"
-                                 class="product-image mb-2"
-                                 alt="{{ $product->nama_produk }}">
+                                class="product-image mb-2"
+                                alt="{{ $product->nama_produk }}">
+
                             <p class="fw-semibold product-name">{{ $product->nama_produk }}</p>
-                            <p class="text-success fw-bold">Rp {{ number_format($product->Harga,0,',','.') }}</p>
-                            <a href="{{ route('produk.show', $product->id) }}" class="btn btn-success btn-sm">Beli</a>
+                            <p class="text-success fw-bold">
+                                Rp {{ number_format($product->Harga,0,',','.') }}
+                            </p>
+
+                            <a href="{{ route('produk.show', $product->id) }}" class="btn btn-success btn-sm">
+                                Beli
+                            </a>
                         </div>
                     </div>
                     @empty

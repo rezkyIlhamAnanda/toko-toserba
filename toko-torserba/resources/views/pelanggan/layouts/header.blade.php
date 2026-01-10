@@ -42,9 +42,9 @@
             <nav class="main-nav d-none d-md-block">
                 <ul>
                     {{-- <li><a href="/">SEMUA PRODUK</a></li> --}}
-                    <li><a href="/" class="{{ Request::is('terbaru') ? 'active' : '' }}">HOME</a></li>
-                    <li><a href="/terbaru" class="{{ Request::is('terbaru') ? 'active' : '' }}">TERBARU</a></li>
-                    <li><a href="/tentang" class="{{ Request::is('tentang') ? 'active' : '' }}">TENTANG</a></li>
+                    <li><a href="/" class="{{ Request::is('/') ? 'active' : '' }}">HOME</a></li>
+                    <li><a href="/semua-produk" class="{{ Request::is('semua-produk') ? 'active' : '' }}">SEMUA PRODUK</a></li>
+                    {{-- <li><a href="/tentang" class="{{ Request::is('tentang') ? 'active' : '' }}">TENTANG</a></li> --}}
                 </ul>
             </nav>
             <div class="header-icons">

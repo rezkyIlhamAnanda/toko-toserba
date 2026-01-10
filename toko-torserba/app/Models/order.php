@@ -10,6 +10,9 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'midtrans_order_id',         
+        'midtrans_transaction_id',
+        'midtrans_transaction_status',
         'pelanggan_id',
         'total',
         'lat',

@@ -30,11 +30,11 @@
 
                         {{-- Nama Produk --}}
                         <div class="mb-3">
-                            <label for="name" class="form-label text-secondary fw-semibold">Nama Produk</label>
-                            <input type="text" name="name" id="name"
-                                   class="form-control rounded-3 @error('name') is-invalid @enderror"
-                                   value="{{ old('name', $product->nama_produk) }}" placeholder="Masukkan nama produk" required>
-                            @error('name')
+                            <label for="nama_produk" class="form-label text-secondary fw-semibold">Nama Produk</label>
+                            <input type="text" name="nama_produk" id="nama_produk"
+                                   class="form-control rounded-3 @error('nama_produk') is-invalid @enderror"
+                                   value="{{ old('nama_produk', $product->nama_produk) }}" placeholder="Masukkan nama produk" required>
+                            @error('nama_produk')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -52,11 +52,11 @@
 
                         {{-- Harga --}}
                         <div class="mb-3">
-                            <label for="Harga" class="form-label text-secondary fw-semibold">Harga</label>
-                            <input type="number" name="Harga" id="Harga"
-                                   class="form-control rounded-3 @error('Harga') is-invalid @enderror"
-                                   value="{{ old('Harga', $product->Harga) }}" placeholder="Contoh: 50000" required>
-                            @error('Harga')
+                            <label for="harga" class="form-label text-secondary fw-semibold">Harga</label>
+                            <input type="number" name="harga" id="harga"
+                                   class="form-control rounded-3 @error('harga') is-invalid @enderror"
+                                   value="{{ old('harga', $product->Harga) }}" placeholder="Contoh: 50000" required>
+                            @error('harga')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

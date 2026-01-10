@@ -21,8 +21,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="image" class="form-label">Gambar Kategori</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                    <label for="gambar" class="form-label">Gambar Kategori</label>
+                    <input type="file" name="gambar" id="gambar" class="form-control" accept="gambar/*" required>
                 </div>
 
                 <button class="btn btn-primary" type="submit">Tambah</button>
@@ -48,14 +48,16 @@
                         <tr>
                             <td>{{ $key+1 }}</td>
                             <td>
-                                @if($category->image)
-                                    <img src="{{ asset('images/categories/' . $category->image) }}"
-                                         alt="{{ $category->name }}"
-                                         class="img-thumbnail" width="100">
+                                @if($category->gambar)
+                                    <img src="{{ asset('storage/' . $category->gambar) }}"
+                                        alt="{{ $category->name }}"
+                                        class="img-thumbnail"
+                                        width="100">
                                 @else
                                     <span class="text-muted">Tidak ada gambar</span>
                                 @endif
                             </td>
+
                             <td>{{ $category->name }}</td>
                             <td>
                                 {{-- Tombol Edit --}}

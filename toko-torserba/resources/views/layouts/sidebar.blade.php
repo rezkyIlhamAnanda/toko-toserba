@@ -25,10 +25,10 @@
             <span class="font-medium">Pesanan</span>
         </a>
 
-        <a href="/admin/transaksi" class="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-red-500 transition">
+        {{-- <a href="/admin/transaksi" class="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-red-500 transition">
             <i class="bi bi-credit-card text-xl"></i>
             <span class="font-medium">Transaksi</span>
-        </a>
+        </a> --}}
 
         <a href="/admin/kategori" class="flex items-center gap-3 py-2 px-4 rounded-lg hover:bg-red-500 transition">
             <i class="bi bi-tags text-xl"></i>

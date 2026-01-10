@@ -40,7 +40,7 @@
                                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                                                 <option value="dikemas" {{ $order->status == 'dikemas' ? 'selected' : '' }}>Dikemas</option>
                                                 <option value="dikirim" {{ $order->status == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
-                                                <option value="diterima" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                                <option value="selesai" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                             </select>
                                         </form>
                                     </td>
